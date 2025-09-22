@@ -34,7 +34,7 @@ export default {
 
 
         onMounted(() => {
-            store.getPosts()  //Per riutilizzare Paginator creare nuova action con nuovo percorso API    
+            store.getPosts()  //Per riutilizzare Paginator cambiare filter in nuovo endpoint API    
         })
 
         return { store, pagStore }
