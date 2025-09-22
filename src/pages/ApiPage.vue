@@ -12,18 +12,15 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="post in paginatedItems">
+                <tr v-for="post in pagStore.paginatedItems">
                     <td v-for="value in post">{{ value }}</td>
                 </tr>
             </tbody>
         </table>
 
         <Paginator 
-        :items="store.posts"
         :per-page="10" 
-        @update:page="currentPage = $event"
-        @update:paginatedItems="paginatedItems = $event" 
-        />
+        /> 
 
 
         <!-- <LoadingVue :active=store.loading :can-cancel=false :is-full-page=false></LoadingVue> -->
@@ -31,9 +28,9 @@
 </template>
 
 <script>
-import { onMounted, ref, toRef, watch } from "vue";
+import { onMounted } from "vue";
 import ApiFilters from "@/components/ApiFilters.vue"
-import { useJsonStore } from "@/store/mainStore.js"
+import { useJsonStore, usePaginatorStore } from "@/store/mainStore.js"
 import LoadingVue from "vue3-loading-overlay";
 import Paginator from "@/utility/Paginator.vue";
 
@@ -42,21 +39,14 @@ export default {
     components: { ApiFilters, LoadingVue, Paginator },
     setup() {
         const store = useJsonStore()
+        const pagStore = usePaginatorStore()
 
-        let currentPage = ref(1)
-        let paginatedItems = ref([])
 
         onMounted(() => {
-            store.getPosts()
+            store.getPosts()      
         })
 
-        watch(() => store.filter , () =>{
-            currentPage.value = 1
-        })
-
-
-
-        return { store, currentPage, paginatedItems }
+        return { store, pagStore }
     }
 }
 </script>

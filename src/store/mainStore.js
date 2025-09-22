@@ -28,7 +28,7 @@ export const useJsonStore = defineStore("json", {
     state: () =>({
         posts: [],
         filter: "posts",
-        loading: true
+        loading: true,
     }),
     actions: {
         getPosts(){
@@ -38,6 +38,34 @@ export const useJsonStore = defineStore("json", {
                 this.posts = data
                 this.loading = false
             })
+        },
+        // resetPage(){
+        //     this.currentPage = 1
+        //     console.log(this.currentPage);
+        //     this.getPosts()            
+        // }
+    }
+})
+
+export const usePaginatorStore = defineStore("paginator", {
+    state: () =>({
+        currentPage: 1,
+        paginatedItems: [],
+        totalPages: 0
+    }),
+    actions: {
+        changePage(n){
+            if (n >= 1 && n <= this.totalPages){
+                this.currentPage = n
+            }
+        },
+        resetPage(){
+            this.changePage(1)
+        },
+        paginateItems(items, perPage){
+            this.totalPages = Math.ceil(items.length / perPage)
+            const start = (this.currentPage - 1) * perPage
+            this.paginatedItems = items.slice(start, start + perPage)
         }
     }
 })

@@ -46,16 +46,17 @@
 
 <script>
 import { ref, watch } from 'vue';
-import { useJsonStore } from "@/store/mainStore.js"
+import { useJsonStore, usePaginatorStore } from "@/store/mainStore.js"
 
 export default {
     setup() {
         const store = useJsonStore()
+        const pagStore = usePaginatorStore()
         const filterRadio = ref("posts")
 
         watch(filterRadio, (newVal, oldVal) => {
+            pagStore.resetPage()
             store.filter = newVal
-            console.log(store.filter);
             store.getPosts()
         })
 
