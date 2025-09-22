@@ -39,11 +39,6 @@ export const useJsonStore = defineStore("json", {
                 this.loading = false
             })
         },
-        // resetPage(){
-        //     this.currentPage = 1
-        //     console.log(this.currentPage);
-        //     this.getPosts()            
-        // }
     }
 })
 

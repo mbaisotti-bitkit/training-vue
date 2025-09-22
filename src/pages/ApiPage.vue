@@ -43,7 +43,7 @@ export default {
 
 
         onMounted(() => {
-            store.getPosts()      
+            store.getPosts()  //Per riutilizzare Paginator creare nuova action con nuovo percorso API    
         })
 
         return { store, pagStore }
