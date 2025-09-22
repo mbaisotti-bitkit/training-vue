@@ -91,3 +91,9 @@ footer {
     border: 1px solid black;
     text-align: center;
 }
+
+/* DataTable */
+
+span.p-2{
+    cursor: pointer;
+}

@@ -2,7 +2,17 @@
     <table class="table table-striped">
             <thead>
                 <tr>
-                    <th v-for="(value, key) in items[0]">{{ key }}</th>
+                    <th v-for="(value, key) in store.posts[0]">
+                        <span>
+                            {{ key }}
+                        </span>
+                        <span v-if="store.descOrder" class="p-2" @click="store.orderRow(key)">
+                            &#8595
+                        </span>
+                        <span v-else class="p-2" @click="store.orderRow(key)">
+                            &#8593
+                        </span>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -22,11 +32,9 @@ export default {
     setup() {
         const pagStore = usePaginatorStore()
         const store = useJsonStore()
-        
-        const items = store.posts
 
         return {
-            items,
+            store,
             pagStore
         }
     }

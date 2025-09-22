@@ -32,8 +32,10 @@ export default {
   props: {
     perPage: Number
   },
-
-  setup(props) {
+  emits:
+    ["paginate"]
+  ,
+  setup(props, { emit }) {
     const store = usePaginatorStore()
 
     const itemsStore = useJsonStore()
@@ -42,11 +44,13 @@ export default {
       currentPage,
       totalPages,
       paginatedItems } = storeToRefs(store)
-    const { changePage, paginateItems } = store
+    const { changePage } = store
 
-    watch([currentPage, () => itemsStore.posts], () => {
-      paginateItems(itemsStore.posts, props.perPage)
-
+    watch([currentPage, () => itemsStore.posts], (newVal, oldVal) => {
+      emit("paginate", {
+        items: itemsStore.posts,
+        perPage: props.perPage,
+      })
     })
 
     return {

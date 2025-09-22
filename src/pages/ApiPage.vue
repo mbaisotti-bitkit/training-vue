@@ -10,6 +10,7 @@
 
         <Paginator 
         :per-page="10" 
+        @paginate="handlePaginate"
         /> 
 
 
@@ -18,7 +19,7 @@
 </template>
 
 <script>
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import ApiFilters from "@/components/ApiFilters.vue"
 import { useJsonStore, usePaginatorStore } from "@/store/mainStore.js"
 import LoadingVue from "vue3-loading-overlay";
@@ -35,9 +36,19 @@ export default {
 
         onMounted(() => {
             store.getPosts()  //Per riutilizzare Paginator cambiare filter in nuovo endpoint API    
+
         })
 
-        return { store, pagStore }
+        const handlePaginate = ({items, perPage}) =>{
+            if ( store.ordered ) {
+                store.orderRow(store.row)
+                pagStore.paginateItems(items, perPage)                                
+            }else {
+                pagStore.paginateItems(items, perPage)
+            }
+        }
+
+        return { store, pagStore, handlePaginate}
     }
 }
 </script>

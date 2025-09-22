@@ -25,42 +25,70 @@ export const useMainStore = defineStore("main", {
 })
 
 export const useJsonStore = defineStore("json", {
-    state: () =>({
+    state: () => ({
         posts: [],
         filter: "posts",
         loading: true,
+        ordered: false,
+        descOrder: true,
+        row: ""
     }),
     actions: {
-        getPosts(){
+        getPosts() {
             this.loading = true
             api.get(`/${this.filter}`)
-            .then(({data}) =>{
-                this.posts = data
-                this.loading = false
-            })
+                .then(({ data }) => {
+                    this.posts = data
+                    this.loading = false
+                })
         },
+        orderRow(row) {
+            console.log(row);
+
+            this.row = row
+            const data = this.posts[0][row]
+            if (typeof data == "string") {
+                this.posts.sort((a, b) => {
+                    return this.descOrder ? a[row].localeCompare(b[row]) : b[row].localeCompare(a[row])
+                })
+
+            } else {
+                this.posts.sort((a, b) => {
+                    return this.descOrder ? a[row] - b[row] : b[row] - a[row]
+                })
+            }
+
+
+            this.descOrder = !this.descOrder
+            console.log(this.posts);
+
+            const paginator = usePaginatorStore()
+            paginator.paginateItems(this.posts, 10)
+
+        }
     }
 })
 
 export const usePaginatorStore = defineStore("paginator", {
-    state: () =>({
+    state: () => ({
         currentPage: 1,
         paginatedItems: [],
         totalPages: 0
     }),
     actions: {
-        changePage(n){
-            if (n >= 1 && n <= this.totalPages){
+        changePage(n) {
+            if (n >= 1 && n <= this.totalPages) {
                 this.currentPage = n
             }
         },
-        resetPage(){
+        resetPage() {
             this.changePage(1)
         },
-        paginateItems(items, perPage){
+        paginateItems(items, perPage) {
             this.totalPages = Math.ceil(items.length / perPage)
             const start = (this.currentPage - 1) * perPage
             this.paginatedItems = items.slice(start, start + perPage)
+
         }
     }
 })
