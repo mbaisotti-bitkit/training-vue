@@ -8,10 +8,15 @@
         <DataTable 
         />
 
-        <Paginator 
-        :per-page="10" 
-        @paginate="handlePaginate"
-        /> 
+        <div class="d-flex justify-content-around">
+            <Paginator 
+            :per-page="10" 
+            @paginate="handlePaginate"
+            /> 
+            <h4>
+                Pagina {{ pagStore.currentPage }}
+            </h4>
+        </div>
 
 
         <!-- <LoadingVue :active=store.loading :can-cancel=false :is-full-page=false></LoadingVue> -->

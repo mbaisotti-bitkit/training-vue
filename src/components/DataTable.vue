@@ -2,16 +2,18 @@
     <table class="table table-striped">
             <thead>
                 <tr>
-                    <th v-for="(value, key) in store.posts[0]">
-                        <span>
-                            {{ key }}
-                        </span>
-                        <span v-if="store.descOrder" class="p-2" @click="store.orderRow(key)">
-                            &#8595
-                        </span>
-                        <span v-else class="p-2" @click="store.orderRow(key)">
-                            &#8593
-                        </span>
+                    <th v-for="(value, key) in store.posts[0]" >
+                        <template class="d-flex flex-column align-items-center" style="min-width: 50px;">
+                            <span>
+                                {{ key }}
+                            </span>
+                            <span v-if="store.sortState.column == key" class="p-2" @click="order(key)">
+                                {{ store.sortState.desc ? "&#8593" : "&#8595"}}
+                            </span>
+                            <span v-else class="p-2" @click="order(key)">
+                                <->
+                            </span>
+                        </template>
                     </th>
                 </tr>
             </thead>
@@ -19,7 +21,7 @@
                 <tr v-for="post in pagStore.paginatedItems">
                     <td v-for="value in post">{{ value }}</td>
                 </tr>
-            </tbody>
+            </tbody>    
         </table>
 </template>
 
@@ -33,9 +35,17 @@ export default {
         const pagStore = usePaginatorStore()
         const store = useJsonStore()
 
+        const order = (key) =>{
+            pagStore.resetPage();
+            store.orderRow(key);
+            console.log(store.sortState.column);
+            
+        }
+
         return {
             store,
-            pagStore
+            pagStore,
+            order
         }
     }
 }

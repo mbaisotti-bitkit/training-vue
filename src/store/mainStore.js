@@ -30,8 +30,10 @@ export const useJsonStore = defineStore("json", {
         filter: "posts",
         loading: true,
         ordered: false,
-        descOrder: true,
-        row: ""
+        sortState: {
+            column: "",
+            desc: true,
+        },
     }),
     actions: {
         getPosts() {
@@ -43,27 +45,34 @@ export const useJsonStore = defineStore("json", {
                 })
         },
         orderRow(row) {
-            console.log(row);
+            // console.log(row);
+            if (this.sortState.column !== row){
+                this.sortState.column = row
+            }
 
-            this.row = row
+            if (!this.ordered){
+                this.ordered = !this.ordered
+            } else {
+                this.sortState.desc = !this.sortState.desc
+            }
+
             const data = this.posts[0][row]
             if (typeof data == "string") {
                 this.posts.sort((a, b) => {
-                    return this.descOrder ? a[row].localeCompare(b[row]) : b[row].localeCompare(a[row])
+                    return this.sortState.desc ? a[row].localeCompare(b[row]) : b[row].localeCompare(a[row])
                 })
 
             } else {
                 this.posts.sort((a, b) => {
-                    return this.descOrder ? a[row] - b[row] : b[row] - a[row]
+                    return this.sortState.desc ? a[row] - b[row] : b[row] - a[row]
                 })
             }
 
 
-            this.descOrder = !this.descOrder
             console.log(this.posts);
 
             const paginator = usePaginatorStore()
-            paginator.paginateItems(this.posts, 10)
+            // paginator.paginateItems(this.posts, 10)
 
         }
     }
